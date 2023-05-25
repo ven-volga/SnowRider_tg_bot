@@ -27,7 +27,7 @@ def parse_hotels(resort):
     for hotel_url in hotels_urls:
         urls.append(str(hotel_url.find("a"))[9:-24])
 
-    return [hotels, prices, guests, urls]
+    return hotels, prices, guests, urls
 
 
 def recommend_hotels(resort):
@@ -45,16 +45,9 @@ def recommend_hotels(resort):
     return hotels_str
 
 
-# TODO function average price hotels
-def average_price(res):
-    return sum(parse_hotels(res)[1]) / len(parse_hotels(res)[1])
-
-
-# TODO min price function
-def min_price():
-    pass
-
-
-# TODO max price function
-def max_price():
-    pass
+def general_hotels_price(resort):
+    price_info = parse_hotels(resort)[1]
+    average_price = round(sum(price_info) / len(price_info))
+    min_price = min(price_info)
+    max_price = max(price_info)
+    return average_price, min_price, max_price

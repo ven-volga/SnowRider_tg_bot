@@ -51,7 +51,8 @@ def get_future_weather(resort, api=api):
 
     try:
         r = requests.get(
-            f"https://api.openweathermap.org/data/2.5/forecast?lat={location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
+            f"https://api.openweathermap.org/data/2.5/forecast?lat="
+            f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
 
         future_data = r.json()
         for i in range(len(future_data["list"])):

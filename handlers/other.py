@@ -13,5 +13,3 @@ async def echo_send(message: types.Message):
 def register_handler_other(dp: Dispatcher):  # реєстрація хендлерів у файлі
     dp.register_message_handler(echo_send)
     #next handler
-    #next handler
-    #....
