@@ -1,6 +1,6 @@
 from aiogram import types, Dispatcher
-from create_bot import dp, bot
-from informations.resorts_info import resorts_info
+from create_bot import bot
+from informations.resorts_info import get_resort
 from keyboards import kb_resorts, kb_service
 from functions.parce_hotels24 import parse_hotels, recommend_hotels, average_price
 from functions.resorts_info import get_resort_info
@@ -48,7 +48,7 @@ async def command_hotels(message: types.Message):
 
 async def command_recommends(callback: types.CallbackQuery):
     url_kb = InlineKeyboardMarkup(row_width=1)
-    url_btn = InlineKeyboardButton(text="На сайт Hotels24.ua", url=resorts_info['hotels_links'][resort])
+    url_btn = InlineKeyboardButton(text="На сайт Hotels24.ua", url=get_resort('hotels_links', resort))
     url_kb.add(url_btn)
 
     await callback.message.answer(f"{recommend_hotels(resort)}", reply_markup=url_kb, parse_mode='html')

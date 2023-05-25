@@ -8,10 +8,7 @@ def parse_hotels(resort):
     url = get_resort('hotels_links', resort)
     src = requests.get(url).text
     soup = BeautifulSoup(src, "lxml")
-    hotels = []
-    prices = []
-    guests = []
-    urls = []
+    hotels, prices, guests, urls = [], [], [], []
 
     hotel_names = soup.find_all("div", class_="hotel-name-block")
     hotel_prices = soup.find_all("div", class_="right-info-column")

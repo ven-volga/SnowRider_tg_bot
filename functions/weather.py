@@ -1,30 +1,18 @@
 import requests
 from datetime import datetime
-from pprint import pprint
-from dotenv import load_dotenv, find_dotenv  # отримання api з віртуального оточення
+from dotenv import load_dotenv, find_dotenv
 import os
+from informations.resorts_info import get_resort
 
 load_dotenv(find_dotenv())  # find api value
 
-api = os.getenv('wether_api')
-
-resorts_coordinates = {
-    "Славське": [48.8473, 23.4459],
-    "Драгобрат": [48.2496, 24.2496],
-    "Буковель": [48.3653, 24.4004],
-    "Пилипець": [48.6677, 23.3519],
-    "Плай": [48.9033, 23.2928],
-    "Яблуниця": [48.3054, 24.4703],
-    "Красія": [48.9379, 22.7074],
-    "Мигове": [48.1575, 25.379],
-    "Яремче": [48.4583, 24.5519]
-}
+api = os.getenv('weather_api')
 
 
 # TODO insert and script weather description dict
 
 def get_current_weather(resort, api=api):
-    location = resorts_coordinates[resort]
+    location = get_resort('resorts_weather', resort)
     current_weather_info = None
 
     try:
@@ -58,7 +46,7 @@ def get_current_weather(resort, api=api):
 
 
 def get_future_weather(resort, api=api):
-    location = resorts_coordinates[resort]
+    location = get_resort('resorts_weather', resort)
     future_weather_info = "<b>На найближчі дні очікується:</b>\n"
 
     try:
