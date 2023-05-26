@@ -1,8 +1,7 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
 from informations.resorts_info import get_resort
-from informations.text_content import except_key_error_text, welcome_text, choose_resort_text, hotels_info_text, \
-    hotels_price_text, fish_text
+from informations.text_content import *
 from keyboards import kb_resorts, kb_service
 from functions.parce_hotels24 import recommend_hotels, general_hotels_price
 from functions.resorts_info import get_resort_info
@@ -24,8 +23,8 @@ async def command_start(message: types.Message):
 async def command_resorts(message: types.Message):
     global resort
     resort = message.text
-    await bot.send_message(message.chat.id,
-                           choose_resort_text.format(resort=resort), reply_markup=kb_service, parse_mode='html')
+    await bot.send_message(message.chat.id, choose_resort_text.format(resort=resort),
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def command_hotels(message: types.Message):
@@ -58,8 +57,8 @@ async def command_recommends(callback: types.CallbackQuery):
 async def command_resorts_info(message: types.Message):
     try:
         if resort:
-            await bot.send_message(message.chat.id, get_resort_info(resort), reply_markup=kb_service,
-                                   parse_mode='html')
+            await bot.send_message(message.chat.id, get_resort_info(resort),
+                                   reply_markup=kb_service, parse_mode='html')
         else:
             raise KeyError()
     except KeyError:
@@ -69,8 +68,8 @@ async def command_resorts_info(message: types.Message):
 async def command_weather(message: types.Message):
     try:
         if resort:
-            await bot.send_message(message.chat.id, get_current_weather(resort), reply_markup=kb_service,
-                                   parse_mode='html')
+            await bot.send_message(message.chat.id, get_current_weather(resort),
+                                   reply_markup=kb_service, parse_mode='html')
             await bot.send_message(message.chat.id, get_future_weather(resort),
                                    reply_markup=kb_service, parse_mode='html')
         else:
@@ -82,8 +81,6 @@ async def command_weather(message: types.Message):
 async def command_equipment(message: types.Message):
     try:
         if resort:
-            await bot.send_message(message.chat.id, fish_text.format(resort=resort), reply_markup=kb_service,
-                                   parse_mode='html')
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
                                    reply_markup=kb_service, parse_mode='html')
         else:
@@ -106,8 +103,6 @@ async def command_skipass(message: types.Message):
 async def command_trains(message: types.Message):
     try:
         if resort:
-            await bot.send_message(message.chat.id, fish_text.format(resort=resort),
-                                   reply_markup=kb_service, parse_mode='html')
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
                                    reply_markup=kb_service, parse_mode='html')
         else:
