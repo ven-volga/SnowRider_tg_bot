@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 import os
-from informations.resorts_info import get_resort
+from informations.resorts_data import get_resort
 
 load_dotenv(find_dotenv())  # find api value
 

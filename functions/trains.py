@@ -1,4 +1,4 @@
-from informations.resorts_info import get_resort
+from informations.resorts_data import get_resort
 
 
 def get_train_info(resort):

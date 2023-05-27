@@ -1,10 +1,10 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
 from functions.trains import get_train_url, get_train_info
-from informations.resorts_info import get_resort
+from informations.resorts_data import get_resort
 from informations.text_content import *
 from keyboards import kb_resorts, kb_service
-from functions.parce_hotels24 import recommend_hotels, general_hotels_price
+from functions.hotels import recommend_hotels, general_hotels_price
 from functions.resorts_info import get_resort_info, how_to_get
 from functions.weather import get_current_weather, get_future_weather
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup

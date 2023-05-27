@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from informations.resorts_info import get_resort
+from informations.resorts_data import get_resort
 
 
 def parse_hotels(resort):

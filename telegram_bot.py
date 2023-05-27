@@ -3,10 +3,12 @@ from create_bot import dp
 from handlers import client, other, admin
 from datetime import datetime
 
+from informations.resorts_data import get_db_data
+
 
 async def on_startup(_):  # when bot started (connect to database)
+    get_db_data()
     print("Bot is online! Started at", datetime.now().strftime('%m %B %G %H:%M:%S'))
-
 
 
 # імпорт функцій з модулів client, admin, other
