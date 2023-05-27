@@ -9,6 +9,7 @@ python-dotenv = "*"
 requests = "*"
 bs4 = "*"
 lxml = "*"
+pymongo = "*"
 
 [dev-packages]
 
