@@ -1,10 +1,11 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
+from functions.trains import get_train_url, get_train_info
 from informations.resorts_info import get_resort
 from informations.text_content import *
 from keyboards import kb_resorts, kb_service
 from functions.parce_hotels24 import recommend_hotels, general_hotels_price
-from functions.resorts_info import get_resort_info
+from functions.resorts_info import get_resort_info, how_to_get
 from functions.weather import get_current_weather, get_future_weather
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -57,19 +58,28 @@ async def command_recommends(callback: types.CallbackQuery):
 async def command_resorts_info(message: types.Message):
     try:
         if resort:
+            how_to_get_kb = InlineKeyboardMarkup(row_width=1).add(
+                InlineKeyboardButton(text=f"Як доїхати до {resort}", callback_data="how_get_to_resort"))
+
             await bot.send_message(message.chat.id, get_resort_info(resort),
-                                   reply_markup=kb_service, parse_mode='html')
+                                   reply_markup=how_to_get_kb, parse_mode='html')
         else:
             raise KeyError()
     except Exception as e:
         await handle_exception(e, message)
 
 
+async def callback_how_to_get_handler(query: types.CallbackQuery):
+    await bot.send_message(query.message.chat.id, how_to_get(resort),
+                           reply_markup=kb_service, parse_mode='html')
+
+
 async def command_weather(message: types.Message):
     try:
         if resort:
             weather_kb = InlineKeyboardMarkup(row_width=1).add(
-                InlineKeyboardButton(text=f"Погода на найближчі дні", callback_data="future_weather_output"))
+                InlineKeyboardButton(text=f"Погода на найближчі дні",
+                                     callback_data="future_weather_output"))
 
             await bot.send_message(message.chat.id, get_current_weather(resort),
                                    reply_markup=weather_kb, parse_mode='html')
@@ -79,11 +89,9 @@ async def command_weather(message: types.Message):
         await handle_exception(e, message)
 
 
-async def callback_weather_handler(query: types.CallbackQuery):
-    data = query.data
-    message = query.message
-    if data == "future_weather_output":
-        await bot.send_message(message.chat.id, get_future_weather(resort), reply_markup=kb_service, parse_mode='html')
+async def callback_future_weather_handler(query: types.CallbackQuery):
+    await bot.send_message(query.message.chat.id, get_future_weather(resort),
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def command_equipment(message: types.Message):
@@ -111,8 +119,11 @@ async def command_skipass(message: types.Message):
 async def command_trains(message: types.Message):
     try:
         if resort:
-            await bot.send_message(message.chat.id, fish_text.format(resort=resort),
-                                   reply_markup=kb_service, parse_mode='html')
+            trains_kb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(
+                text=f"До розкладу руху", url=get_train_url(resort)))
+
+            await bot.send_message(message.chat.id, get_train_info(resort),
+                                   reply_markup=trains_kb, parse_mode='html')
         else:
             raise KeyError()
     except Exception as e:
@@ -126,19 +137,18 @@ async def handle_exception(exception, message):
         pass
 
 
-def register_handler_client(dp: Dispatcher):  # реєстрація хендлерів у файлі
-    dp.register_message_handler(command_start, lambda message: message.text in ["/start", "help", "info", "Назад"])
-    dp.register_message_handler(command_resorts,
-                                lambda message:
-                                message.text in ("Славське", "Драгобрат", "Буковель", "Пилипець", "Плай", "Яблуниця",
-                                                 "Красія", "Мигове", "Яремче")
-                                )
-
+def register_handler_client(dp: Dispatcher):
+    dp.register_message_handler(command_start, lambda message: message.text in ("/start", "help", "info",
+                                                                                "До вибору курорту"))
+    dp.register_message_handler(command_resorts, lambda message: message.text in
+                                                                 ("Славське", "Драгобрат", "Буковель", "Пилипець",
+                                                                  "Плай", "Яблуниця", "Красія", "Мигове", "Яремче"))
     dp.register_message_handler(command_hotels, lambda message: "Житло" in message.text)
     dp.register_message_handler(command_resorts_info, lambda message: "Про курорт" in message.text)
     dp.register_message_handler(command_weather, lambda message: "Погода" in message.text)
-    dp.register_message_handler(command_equipment, lambda message: "Екіп" in message.text)
+    dp.register_message_handler(command_equipment, lambda message: "Споряга" in message.text)
     dp.register_message_handler(command_skipass, lambda message: "Ski-pass" in message.text)
-    dp.register_message_handler(command_trains, lambda message: "Поїзди" in message.text)
+    dp.register_message_handler(command_trains, lambda message: "Потяги" in message.text)
     dp.register_callback_query_handler(command_recommends, text='recommend_hotels')
-    dp.register_callback_query_handler(callback_weather_handler)
+    dp.register_callback_query_handler(callback_future_weather_handler, text='future_weather_output')
+    dp.register_callback_query_handler(callback_how_to_get_handler, text='how_get_to_resort')

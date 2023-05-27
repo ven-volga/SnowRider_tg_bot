@@ -6,7 +6,7 @@ from informations.resorts_info import get_resort
 
 load_dotenv(find_dotenv())  # find api value
 
-api = os.getenv('weather_api')
+api = os.getenv('WEATHER_API')
 
 
 # TODO insert and script weather description dict
@@ -17,7 +17,8 @@ def get_current_weather(resort, api=api):
 
     try:
         r = requests.get(
-            f"https://api.openweathermap.org/data/2.5/weather?lat={location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
+            f"https://api.openweathermap.org/data/2.5/weather?lat="
+            f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
         current_data = r.json()
 
         real_temp = current_data["main"]["temp"]
@@ -26,21 +27,22 @@ def get_current_weather(resort, api=api):
         pressure = current_data["main"]["pressure"]
         wind = current_data["wind"]["speed"]
         description = current_data["weather"][0]["description"].capitalize()
-        sunrise = datetime.fromtimestamp(current_data['sys']['sunrise']).strftime('%H:%M:%S')
-        sunset = datetime.fromtimestamp(current_data['sys']['sunset']).strftime('%H:%M:%S')
+        sunrise = datetime.fromtimestamp(current_data['sys']['sunrise']).strftime('%H:%M')
+        sunset = datetime.fromtimestamp(current_data['sys']['sunset']).strftime('%H:%M')
         day = (datetime.fromtimestamp(current_data['sys']['sunset']) - datetime.fromtimestamp(
             current_data['sys']['sunrise']))
 
         current_weather_info = f"<b>Зараз у {resort} - {description}.</b>\n" \
-                               f"Tемпература повітря: {real_temp}°C\n<i>(по відчуттям: {feels_temp}°C)</i>\n" \
+                               f"Tемпература повітря: {round(real_temp)}°C\n" \
+                               f"<i>(по відчуттям: {round(feels_temp)}°C)</i>\n" \
                                f"Швидкість вітру: {wind} м/c\nВологість повітря: {humidity}%\n" \
                                f"Атмосферний тиск: {pressure} мм.рт.ст.\n" \
                                f"Схід сонця: {sunrise}\n" \
                                f"Захід сонця: {sunset}\n" \
                                f"Тривалість дня: {day}"
-    except Exception as ex:
-        print(ex)
-        print("Unexpected result!")
+    except Exception as e:
+        print(e)
+        print("Unexpected result! (Weather app)")
 
     return current_weather_info
 
@@ -61,8 +63,8 @@ def get_future_weather(resort, api=api):
                                        f"{round(future_data['list'][i]['main']['temp'])}°C | " \
                                        f"{future_data['list'][i]['weather'][0]['description'].capitalize()} | " \
                                        f"Вітер: {future_data['list'][i]['wind']['speed']} м/с\n"
-    except Exception as ex:
-        print(ex)
-        print("Unexpected result!")
+    except Exception as e:
+        print(e)
+        print("Unexpected result! (Weather app)")
 
     return future_weather_info

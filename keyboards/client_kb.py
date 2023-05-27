@@ -19,10 +19,10 @@ kb_resorts.row(r7, r8, r9)
 s1 = KeyboardButton("Про курорт")
 s2 = KeyboardButton("Погода")
 s3 = KeyboardButton("Житло")
-s4 = KeyboardButton("Екіп")
+s4 = KeyboardButton("Споряга")
 s5 = KeyboardButton("Ski-pass")
-s6 = KeyboardButton("Поїзди")
-s7 = KeyboardButton("Назад")
+s6 = KeyboardButton("Потяги")
+s7 = KeyboardButton("До вибору курорту")
 
 kb_service = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
 
