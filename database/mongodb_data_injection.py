@@ -1,17 +1,12 @@
 from pymongo import MongoClient
-from pprint import pprint
-client = MongoClient('mongodb://localhost:27017/')
-db = client.ski_assistant_tg
-collection = db.resorts_content
 
-
-def get_resort(service, resort_name):
-    resort = collection.find_one()[service][resort_name]
-    return resort
+client_db = MongoClient('mongodb://localhost:27017/')
+db = client_db.ski_assistant_tg
+data = db.resorts_content
 
 
 def insert_data_to_db():
-    collection.insert_one({
+    data.insert_one({
         # resorts links on Hotels24.ua
         'hotels_links': {
             'Славське': 'https://hotels24.ua/?lang_code=uk&target=search&event=city&typeLink=hotels24&city_id=18598&order_hotel=15&dateDeparture=&openMap=0&city=%D0%A1%D0%BB%D0%B0%D0%B2%D1%81%D1%8C%D0%BA%D0%B5&guests%5B1%5D%5B0%5D=2&guests%5B1%5D%5B1%5D=0&guests%5B1%5D%5B2%5D=0&FilterForm%5Bgeocode_reverse%5D=null&geoLandingId=',
@@ -90,4 +85,3 @@ def insert_data_to_db():
 
 if __name__ == '__main__':
     insert_data_to_db()
-

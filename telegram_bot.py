@@ -8,6 +8,7 @@ async def on_startup(_):  # when bot started (connect to database)
     print("Bot is online! Started at", datetime.now().strftime('%m %B %G %H:%M:%S'))
 
 
+
 # імпорт функцій з модулів client, admin, other
 client.register_handler_client(dp)
 # admin.register_handler_admin(dp)
