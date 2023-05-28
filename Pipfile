@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 aiogram = "*"
 python-dotenv = "*"
-requests = "*"
 bs4 = "*"
 lxml = "*"
 pymongo = "*"
+asyncio = "*"
+aiohttp = "*"
 
 [dev-packages]
 

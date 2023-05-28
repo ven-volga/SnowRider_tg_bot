@@ -1,10 +1,11 @@
+import requests
 from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 import os
 from informations.resorts_data import get_resort
-import aiohttp
 
 load_dotenv(find_dotenv())  # find api value
+
 api = os.getenv('WEATHER_API')
 
 
@@ -15,11 +16,10 @@ async def get_current_weather(resort, api=api):
     current_weather_info = None
 
     try:
-        async with aiohttp.ClientSession() as session:
-            url = f"https://api.openweathermap.org/data/2.5/weather?lat=" \
-                  f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua"
-            async with session.get(url, ssl=False) as response:
-                current_data = await response.json()
+        r = requests.get(
+            f"https://api.openweathermap.org/data/2.5/weather?lat="
+            f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
+        current_data = r.json()
 
         real_temp = current_data["main"]["temp"]
         feels_temp = current_data["main"]["feels_like"]
@@ -42,7 +42,7 @@ async def get_current_weather(resort, api=api):
                                f"Тривалість дня: {day}"
     except Exception as e:
         print(e)
-        print("Unexpected result! (Current weather app)")
+        print("Unexpected result! (Weather app)")
 
     return current_weather_info
 
@@ -52,12 +52,11 @@ async def get_future_weather(resort, api=api):
     future_weather_info = "<b>На найближчі дні очікується:</b>\n"
 
     try:
-        async with aiohttp.ClientSession() as session:
-            url = f"https://api.openweathermap.org/data/2.5/forecast?lat=" \
-                  f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua"
-            async with session.get(url, ssl=False) as response:
-                future_data = await response.json()
+        r = requests.get(
+            f"https://api.openweathermap.org/data/2.5/forecast?lat="
+            f"{location[0]}&lon={location[1]}&appid={api}&units=metric&lang=ua")
 
+        future_data = r.json()
         for i in range(len(future_data["list"])):
             if future_data['list'][i]['dt_txt'][-8:] == "12:00:00":
                 future_weather_info += f"{datetime.fromtimestamp(future_data['list'][i]['dt']).strftime('%d.%m')}: " \
@@ -66,6 +65,6 @@ async def get_future_weather(resort, api=api):
                                        f"Вітер: {future_data['list'][i]['wind']['speed']} м/с\n"
     except Exception as e:
         print(e)
-        print("Unexpected result! (Future weather app)")
+        print("Unexpected result! (Weather app)")
 
     return future_weather_info

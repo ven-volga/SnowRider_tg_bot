@@ -17,7 +17,7 @@ def get_db_data():
     print("Data from database saved in value")
 
 
-def get_resort(service, resort_name):
+async def get_resort(service, resort_name):
     resort = db_data[service][resort_name]
     print("Data from value", service, resort_name)
     return resort

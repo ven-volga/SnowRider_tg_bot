@@ -1,9 +1,11 @@
 from informations.resorts_data import get_resort
 
 
-def get_resort_info(resort):
-    return get_resort('resorts_info', resort)
+async def get_resort_info(resort):
+    resort_data = await get_resort('resorts_info', resort)
+    return resort_data
 
 
-def how_to_get(resort):
-    return get_resort('how_to_get_info', resort)
+async def how_to_get(resort):
+    road_data = await get_resort('how_to_get_info', resort)
+    return road_data

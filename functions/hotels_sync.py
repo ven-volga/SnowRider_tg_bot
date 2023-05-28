@@ -1,16 +1,14 @@
+import requests
 from bs4 import BeautifulSoup
+
 from informations.resorts_data import get_resort
-import aiohttp
 
 
-async def parse_hotels(resort):
-    hotels, prices, guests, urls = [], [], [], []
-    async with aiohttp.ClientSession() as session:
-        url = await get_resort('hotels_links', resort)
-        async with session.get(url, ssl=False) as response:
-            src = await response.text()
-
+def parse_hotels(resort):
+    url = get_resort('hotels_links', resort)
+    src = requests.get(url).text
     soup = BeautifulSoup(src, "lxml")
+    hotels, prices, guests, urls = [], [], [], []
 
     hotel_names = soup.find_all("div", class_="hotel-name-block")
     hotel_prices = soup.find_all("div", class_="right-info-column")
@@ -32,8 +30,8 @@ async def parse_hotels(resort):
     return hotels, prices, guests, urls
 
 
-async def recommend_hotels(resort):
-    parce_info = await parse_hotels(resort)
+def recommend_hotels(resort):
+    parce_info = parse_hotels(resort)
     hotels = parce_info[0]
     prices = parce_info[1]
     guests = parce_info[2]
@@ -47,9 +45,8 @@ async def recommend_hotels(resort):
     return hotels_str
 
 
-async def general_hotels_price(resort):
-    price_data = await parse_hotels(resort)
-    price_info = price_data[1]
+def general_hotels_price(resort):
+    price_info = parse_hotels(resort)[1]
     average_price = round(sum(price_info) / len(price_info))
     min_price = min(price_info)
     max_price = max(price_info)
