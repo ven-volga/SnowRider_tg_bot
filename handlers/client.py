@@ -8,29 +8,35 @@ from functions.hotels import recommend_hotels, general_hotels_price
 from functions.resorts_info import get_resort_info, how_to_get
 from functions.weather import get_current_weather, get_future_weather
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
 
-resort = None
+
+class ResortState(StatesGroup):
+    ChoosingResort = State()
 
 
-async def command_start(message: types.Message):
-    global resort
-    resort = None
+async def command_start(message: types.Message, state: FSMContext):
+    await state.finish()
     await bot.send_message(message.chat.id,
                            welcome_text.format(first_name=message.from_user.first_name,
                                                last_name=message.from_user.last_name),
                            reply_markup=kb_resorts, parse_mode='html')
 
 
-async def command_resorts(message: types.Message):
-    global resort
-    resort = message.text
-    await bot.send_message(message.chat.id, choose_resort_text.format(resort=resort),
+async def command_resorts(message: types.Message, state: FSMContext):
+    await state.finish()
+    await state.update_data(resort=message.text)
+    await bot.send_message(message.chat.id, choose_resort_text.format(resort=message.text),
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_hotels(message: types.Message):
+async def command_hotels(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
         hotels_price_info = await general_hotels_price(resort)
+
         if resort:
             await bot.send_message(message.chat.id, hotels_info_text.format(resort=resort), parse_mode='html')
 
@@ -46,7 +52,10 @@ async def command_hotels(message: types.Message):
         await handle_exception(e, message)
 
 
-async def command_recommends(callback: types.CallbackQuery):
+async def command_recommends(callback: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
     hotels_url = await get_resort('hotels_links', resort)
     url_kb = InlineKeyboardMarkup(row_width=1)
     url_btn = InlineKeyboardButton(text="На сайт Hotels24.ua", url=hotels_url)
@@ -57,8 +66,11 @@ async def command_recommends(callback: types.CallbackQuery):
     await callback.answer()
 
 
-async def command_resorts_info(message: types.Message):
+async def command_resorts_info(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
+
         if resort:
             how_to_get_kb = InlineKeyboardMarkup(row_width=1).add(
                 InlineKeyboardButton(text=f"Як доїхати до {resort}", callback_data="how_get_to_resort"))
@@ -71,14 +83,20 @@ async def command_resorts_info(message: types.Message):
         await handle_exception(e, message)
 
 
-async def callback_how_to_get_handler(query: types.CallbackQuery):
+async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
     how_to_get_info = await how_to_get(resort)
     await bot.send_message(query.message.chat.id, how_to_get_info,
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_weather(message: types.Message):
+async def command_weather(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
+
         if resort:
             weather_kb = InlineKeyboardMarkup(row_width=1).add(
                 InlineKeyboardButton(text=f"Погода на найближчі дні",
@@ -93,14 +111,20 @@ async def command_weather(message: types.Message):
         await handle_exception(e, message)
 
 
-async def callback_future_weather_handler(query: types.CallbackQuery):
+async def callback_future_weather_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
     future_weather = await get_future_weather(resort)
     await bot.send_message(query.message.chat.id, future_weather,
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_equipment(message: types.Message):
+async def command_equipment(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
+
         if resort:
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
                                    reply_markup=kb_service, parse_mode='html')
@@ -110,8 +134,11 @@ async def command_equipment(message: types.Message):
         await handle_exception(e, message)
 
 
-async def command_skipass(message: types.Message):
+async def command_skipass(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
+
         if resort:
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
                                    reply_markup=kb_service, parse_mode='html')
@@ -121,8 +148,11 @@ async def command_skipass(message: types.Message):
         await handle_exception(e, message)
 
 
-async def command_trains(message: types.Message):
+async def command_trains(message: types.Message, state: FSMContext):
     try:
+        data = await state.get_data()
+        resort = data.get('resort')
+
         if resort:
             train_url = await get_train_url(resort)
             trains_kb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(
