@@ -15,7 +15,7 @@ db_data: dict | None = None
 async def get_db_data():
     global db_data
     db_data = data.find_one()
-    print("Data from database saved in value", datetime.now())
+    print("Data from database saved in value", datetime.now().strftime('%d %B %G %H:%M:%S'))
 
 
 async def get_resort(service, resort_name):

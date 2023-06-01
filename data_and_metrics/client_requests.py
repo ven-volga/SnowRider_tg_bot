@@ -24,12 +24,12 @@ services_log_null = {
 requests_log_day = deepcopy(services_log_null)
 
 
-async def download_requests_log():
+async def download_requests_log() -> dict:
     log_data = log.find_one()
     return log_data
 
 
-async def join_logs():
+async def join_logs() -> dict:
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
     new_log = {}
@@ -45,7 +45,7 @@ async def join_logs():
     return new_log
 
 
-async def upload_requests_log():
+async def upload_requests_log() -> None:
     global requests_log_day
     new_log = await join_logs()
     log.insert_one(new_log)
@@ -55,5 +55,5 @@ async def upload_requests_log():
 
 async def schedule_log_task():
     while True:
-        await asyncio.sleep(60 * 60 * 24)  # Інтервал часу 24 години
+        await asyncio.sleep(60 * 60 * 24)
         await upload_requests_log()

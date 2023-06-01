@@ -8,7 +8,7 @@ from informations.resorts_data import get_db_data
 
 
 async def on_startup(_: dp):
-    print("Bot is online! Started at", datetime.now().strftime('%m %B %G %H:%M:%S'))
+    print("Bot is online! Started at", datetime.now().strftime('%d %B %G %H:%M:%S'))
     await get_db_data()
     schedule_task = asyncio.create_task(schedule_log_task())  # Запуск відкладеної функції у асинхронній петлі
     await schedule_task  # Очікування завершення відкладеної задачі
@@ -20,7 +20,7 @@ async def on_shutdown(_: dp):
 
 # імпорт функцій з модулів client, admin, other
 client.register_handler_client(dp)
-# admin.register_handler_admin(dp)
+admin.register_handler_admin(dp)
 # other.register_handler_other(dp)
 
 # Запуск бота з використанням асинхронної петлі asyncio
