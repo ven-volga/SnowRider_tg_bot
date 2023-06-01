@@ -1,8 +1,10 @@
 from pymongo import MongoClient
+from datetime import datetime
 
 client_db = MongoClient('mongodb://localhost:27017/')
 db = client_db.ski_assistant_tg
 data = db.resorts_content
+log = db.client_requests
 
 
 def insert_data_to_db():
@@ -83,5 +85,26 @@ def insert_data_to_db():
     print("Insert data into database successfully complete")
 
 
+def insert_log_to_db():
+    log.insert_one(
+        {
+            "_id": 1,
+            "time_stamp": datetime.now(),
+            "Славське": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Драгобрат": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Буковель": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Пилипець": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Плай": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Яблуниця": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Красія": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Мигове": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+            "Яремче": {"Про курорт": 0, "Погода": 0, "Житло": 0, "Спорядження": 0, "Ski-pass": 0, "Потяги": 0},
+        }
+    )
+    print("Insert log into database successfully complete")
+
+
 if __name__ == '__main__':
-    insert_data_to_db()
+    # insert_data_to_db()
+    # insert_log_to_db()
+    pass

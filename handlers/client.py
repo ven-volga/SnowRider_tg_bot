@@ -10,6 +10,7 @@ from functions.weather import get_current_weather, get_future_weather
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from data_and_metrics.client_requests import requests_log_day
 
 
 class ResortState(StatesGroup):
@@ -36,6 +37,7 @@ async def command_hotels(message: types.Message, state: FSMContext):
         data = await state.get_data()
         resort = data.get('resort')
         hotels_price_info = await general_hotels_price(resort)
+        requests_log_day[resort]["Житло"] += 1
 
         if resort:
             await bot.send_message(message.chat.id, hotels_info_text.format(resort=resort), parse_mode='html')
@@ -70,6 +72,7 @@ async def command_resorts_info(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
+        requests_log_day[resort]["Про курорт"] += 1
 
         if resort:
             how_to_get_kb = InlineKeyboardMarkup(row_width=1).add(
@@ -96,6 +99,7 @@ async def command_weather(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
+        requests_log_day[resort]["Погода"] += 1
 
         if resort:
             weather_kb = InlineKeyboardMarkup(row_width=1).add(
@@ -124,6 +128,7 @@ async def command_equipment(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
+        requests_log_day[resort]["Спорядження"] += 1
 
         if resort:
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
@@ -138,6 +143,7 @@ async def command_skipass(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
+        requests_log_day[resort]["Ski-pass"] += 1
 
         if resort:
             await bot.send_message(message.chat.id, fish_text.format(resort=resort),
@@ -152,6 +158,7 @@ async def command_trains(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
+        requests_log_day[resort]["Потяги"] += 1
 
         if resort:
             train_url = await get_train_url(resort)
