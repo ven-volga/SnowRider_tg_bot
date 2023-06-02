@@ -1,0 +1,4 @@
+1. Skipass function with pictures
+2. Equipment function with pictures
+3. Change weather description
+4. Unknown command answer
