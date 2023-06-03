@@ -1,7 +1,7 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
 from functions.skipass import get_skipass_info
-from functions.tracks import get_tracks_info
+from functions.resorts_info import get_tracks_info
 from functions.trains import get_train_url, get_train_info
 from informations.resorts_data import get_resort
 from informations.text_content import *
@@ -13,6 +13,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from data_and_metrics.client_requests import requests_log_day
+from keyboards.client_kb import resort_options_kb
 
 
 class ResortState(StatesGroup):
@@ -41,11 +42,8 @@ async def command_resorts_info(message: types.Message, state: FSMContext):
         requests_log_day[resort]["Про курорт"] += 1
 
         if resort:
-            how_to_get_kb = InlineKeyboardMarkup(row_width=1).add(
-                InlineKeyboardButton(text=f"Як доїхати до {resort}", callback_data="how_get_to_resort"))
-
             resort_info = await get_resort_info(resort)
-            await bot.send_message(message.chat.id, resort_info, reply_markup=how_to_get_kb, parse_mode='html')
+            await bot.send_message(message.chat.id, resort_info, reply_markup=resort_options_kb, parse_mode='html')
         else:
             raise KeyError()
     except Exception as e:
@@ -58,7 +56,16 @@ async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMCont
 
     how_to_get_info = await how_to_get(resort)
     await bot.send_message(query.message.chat.id, how_to_get_info,
-                           reply_markup=kb_service, parse_mode='html')
+                           reply_markup=resort_options_kb, parse_mode='html')
+
+
+async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
+    tracks_info = await get_tracks_info(resort)
+    await bot.send_message(query.message.chat.id, tracks_info,
+                           reply_markup=resort_options_kb, parse_mode='html')
 
 
 async def command_weather(message: types.Message, state: FSMContext):
@@ -126,11 +133,12 @@ async def command_recommends(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-async def command_tracks(message: types.Message, state: FSMContext):
+# TODO web-cams logic
+async def command_web_cams(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
-        requests_log_day[resort]["Траси"] += 1
+        requests_log_day[resort]["web-cams"] += 1
 
         if resort:
             tracks_info = await get_tracks_info(resort)
@@ -194,9 +202,10 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(command_hotels, lambda message: "Житло" in message.text)
     dp.register_message_handler(command_resorts_info, lambda message: "Про курорт" in message.text)
     dp.register_message_handler(command_weather, lambda message: "Погода" in message.text)
-    dp.register_message_handler(command_tracks, lambda message: "Траси" in message.text)
+    dp.register_message_handler(command_web_cams, lambda message: "Веб-камери" in message.text)
     dp.register_message_handler(command_skipass, lambda message: "Ski-pass" in message.text)
     dp.register_message_handler(command_trains, lambda message: "Потяги" in message.text)
     dp.register_callback_query_handler(command_recommends, text='recommend_hotels')
     dp.register_callback_query_handler(callback_future_weather_handler, text='future_weather_output')
     dp.register_callback_query_handler(callback_how_to_get_handler, text='how_get_to_resort')
+    dp.register_callback_query_handler(callback_tracks_handler, text='resort_tracks')
