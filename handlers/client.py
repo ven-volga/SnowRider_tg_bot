@@ -1,8 +1,9 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
 from functions.skipass import get_skipass_info
-from functions.resorts_info import get_tracks_info
+from functions.resorts_info import get_tracks_info, get_attractions_info, get_food_info
 from functions.trains import get_train_url, get_train_info
+from functions.web_cams import get_webcam_url
 from informations.resorts_data import get_resort
 from informations.text_content import *
 from keyboards import kb_resorts, kb_service
@@ -65,6 +66,24 @@ async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext)
 
     tracks_info = await get_tracks_info(resort)
     await bot.send_message(query.message.chat.id, tracks_info,
+                           reply_markup=resort_options_kb, parse_mode='html')
+
+
+async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
+    food_info = await get_food_info(resort)
+    await bot.send_message(query.message.chat.id, food_info,
+                           reply_markup=resort_options_kb, parse_mode='html')
+
+
+async def callback_attractions_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
+    attractions_info = await get_attractions_info(resort)
+    await bot.send_message(query.message.chat.id, attractions_info,
                            reply_markup=resort_options_kb, parse_mode='html')
 
 
@@ -133,17 +152,29 @@ async def command_recommends(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-# TODO web-cams logic
 async def command_web_cams(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
         resort = data.get('resort')
         requests_log_day[resort]["web-cams"] += 1
 
-        if resort:
-            tracks_info = await get_tracks_info(resort)
-            await bot.send_message(message.chat.id, tracks_info,
-                                   reply_markup=kb_service, parse_mode='html')
+        if resort != "Славське":
+            webcam_url = await get_webcam_url(resort)
+            webcam_kb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(
+                text=f"Веб-камери {resort}", url=webcam_url))
+
+            await bot.send_message(message.chat.id, web_cam_text.format(resort=resort),
+                                   reply_markup=webcam_kb, parse_mode='html')
+        elif resort == "Славське":
+            webcam_url = await get_webcam_url(resort)
+            webcam_kb = InlineKeyboardMarkup(row_width=2).add(
+                InlineKeyboardButton(text='Тростян', url=webcam_url[0]),
+                InlineKeyboardButton(text='Захар-Беркут', url=webcam_url[1]),
+                InlineKeyboardButton(text='Погар', url=webcam_url[2]),
+                InlineKeyboardButton(text='Політехніка', url=webcam_url[3]))
+
+            await bot.send_message(message.chat.id, web_cam_text.format(resort=resort),
+                                   reply_markup=webcam_kb, parse_mode='html')
         else:
             raise KeyError()
     except Exception as e:
@@ -209,3 +240,5 @@ def register_handler_client(dp: Dispatcher):
     dp.register_callback_query_handler(callback_future_weather_handler, text='future_weather_output')
     dp.register_callback_query_handler(callback_how_to_get_handler, text='how_get_to_resort')
     dp.register_callback_query_handler(callback_tracks_handler, text='resort_tracks')
+    dp.register_callback_query_handler(callback_food_handler, text='resort_food')
+    dp.register_callback_query_handler(callback_attractions_handler, text='resort_attractions')
