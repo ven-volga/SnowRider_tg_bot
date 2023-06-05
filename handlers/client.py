@@ -43,12 +43,21 @@ async def command_resorts_info(message: types.Message, state: FSMContext):
         requests_log_day[resort]["Про курорт"] += 1
 
         if resort:
-            resort_info = await get_resort_info(resort)
-            await bot.send_message(message.chat.id, resort_info, reply_markup=resort_options_kb, parse_mode='html')
+            await bot.send_message(message.chat.id, '<b>Друже, що цікавить?</b>', reply_markup=resort_options_kb,
+                                   parse_mode='html')
         else:
             raise KeyError()
     except Exception as e:
         await handle_exception(e, message)
+
+
+async def callback_resort_info_handler(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    resort = data.get('resort')
+
+    resort_info = await get_resort_info(resort)
+    await bot.send_message(query.message.chat.id, resort_info,
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMContext):
@@ -57,7 +66,7 @@ async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMCont
 
     how_to_get_info = await how_to_get(resort)
     await bot.send_message(query.message.chat.id, how_to_get_info,
-                           reply_markup=resort_options_kb, parse_mode='html')
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext):
@@ -66,7 +75,7 @@ async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext)
 
     tracks_info = await get_tracks_info(resort)
     await bot.send_message(query.message.chat.id, tracks_info,
-                           reply_markup=resort_options_kb, parse_mode='html')
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
@@ -75,7 +84,7 @@ async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
 
     food_info = await get_food_info(resort)
     await bot.send_message(query.message.chat.id, food_info,
-                           reply_markup=resort_options_kb, parse_mode='html')
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def callback_attractions_handler(query: types.CallbackQuery, state: FSMContext):
@@ -84,7 +93,7 @@ async def callback_attractions_handler(query: types.CallbackQuery, state: FSMCon
 
     attractions_info = await get_attractions_info(resort)
     await bot.send_message(query.message.chat.id, attractions_info,
-                           reply_markup=resort_options_kb, parse_mode='html')
+                           reply_markup=kb_service, parse_mode='html')
 
 
 async def command_weather(message: types.Message, state: FSMContext):
@@ -238,6 +247,7 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(command_trains, lambda message: "Потяги" in message.text)
     dp.register_callback_query_handler(command_recommends, text='recommend_hotels')
     dp.register_callback_query_handler(callback_future_weather_handler, text='future_weather_output')
+    dp.register_callback_query_handler(callback_resort_info_handler, text='resort_info')
     dp.register_callback_query_handler(callback_how_to_get_handler, text='how_get_to_resort')
     dp.register_callback_query_handler(callback_tracks_handler, text='resort_tracks')
     dp.register_callback_query_handler(callback_food_handler, text='resort_food')

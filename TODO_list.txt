@@ -1,4 +1,2 @@
-1. Process inline kb on resorts about handler
-2. Web cams function
 3. Change weather description
 4. Unknown command answer

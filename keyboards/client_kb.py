@@ -31,8 +31,9 @@ kb_service.row(s1, s2, s3)
 kb_service.row(s4, s5, s6)
 kb_service.add(s7)
 
-resort_options_kb = InlineKeyboardMarkup(row_width=2).add(
-    InlineKeyboardButton(text="Траси", callback_data="resort_tracks"),
+resort_options_kb = InlineKeyboardMarkup(row_width=1).add(
+    InlineKeyboardButton(text="Загальна інформація", callback_data="resort_info"),
+    InlineKeyboardButton(text="Про траси", callback_data="resort_tracks"),
     InlineKeyboardButton(text="Як доїхати", callback_data="how_get_to_resort"),
     InlineKeyboardButton(text="Де поїсти", callback_data="resort_food"),
     InlineKeyboardButton(text="Що подивитись", callback_data="resort_attractions"))
