@@ -162,7 +162,8 @@ def insert_log_to_db():
             "Красія": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
             "Мигове": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
             "Яремче": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
-        }
+        },
+
     )
     print("Insert log into database successfully complete")
 

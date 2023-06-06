@@ -1,5 +1,6 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
+from data_and_metrics.photo_sender import welcome_photo
 from functions.skipass import get_skipass_info
 from functions.resorts_info import get_tracks_info, get_attractions_info, get_food_info
 from functions.trains import get_train_url, get_train_info
@@ -10,7 +11,7 @@ from keyboards import kb_resorts, kb_service
 from functions.hotels import recommend_hotels, general_hotels_price
 from functions.resorts_info import get_resort_info, how_to_get
 from functions.weather import get_current_weather, get_future_weather
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from data_and_metrics.client_requests import requests_log_day
@@ -32,6 +33,8 @@ async def command_start(message: types.Message, state: FSMContext):
 async def command_resorts(message: types.Message, state: FSMContext):
     await state.finish()
     await state.update_data(resort=message.text)
+    photo = InputFile(await welcome_photo(resort=message.text))
+    await bot.send_photo(message.chat.id, photo)
     await bot.send_message(message.chat.id, choose_resort_text.format(resort=message.text),
                            reply_markup=kb_service, parse_mode='html')
 
