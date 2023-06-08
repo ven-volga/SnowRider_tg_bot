@@ -34,8 +34,10 @@ async def command_resorts(message: types.Message, state: FSMContext):
     await state.finish()
     await state.update_data(resort=message.text)
     photo = InputFile(await welcome_photo(resort=message.text))
+    await bot.send_message(message.chat.id, choose_resort_text_1.format(resort=message.text),
+                           reply_markup=kb_service, parse_mode='html')
     await bot.send_photo(message.chat.id, photo)
-    await bot.send_message(message.chat.id, choose_resort_text.format(resort=message.text),
+    await bot.send_message(message.chat.id, choose_resort_text_2.format(resort=message.text),
                            reply_markup=kb_service, parse_mode='html')
 
 
