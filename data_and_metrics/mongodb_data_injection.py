@@ -1,7 +1,8 @@
+import os
 from pymongo import MongoClient
 from datetime import datetime
 
-client_db = MongoClient('mongodb://localhost:27017/')
+client_db = MongoClient(os.getenv('MONGO_URI'))
 db = client_db.ski_assistant_tg
 data = db.resorts_content
 log = db.client_requests

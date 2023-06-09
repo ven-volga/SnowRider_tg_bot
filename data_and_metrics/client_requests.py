@@ -1,11 +1,12 @@
 import asyncio
+import os
 from copy import deepcopy
 from typing import Any
 
 from pymongo import MongoClient
 from datetime import datetime
 
-client_db = MongoClient('mongodb://localhost:27017/')
+client_db = MongoClient(os.getenv('MONGO_URI'))
 db = client_db.ski_assistant_tg
 log = db.client_requests
 
