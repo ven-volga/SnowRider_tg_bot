@@ -19,6 +19,7 @@ from keyboards.client_kb import resort_options_kb
 
 
 class ResortState(StatesGroup):
+    """ Value for save 'Resort name' for client """
     ChoosingResort = State()
 
 
@@ -34,10 +35,8 @@ async def command_resorts(message: types.Message, state: FSMContext):
     await state.finish()
     await state.update_data(resort=message.text)
     photo = InputFile(await welcome_photo(resort=message.text))
-    await bot.send_message(message.chat.id, choose_resort_text_1.format(resort=message.text),
-                           reply_markup=kb_service, parse_mode='html')
     await bot.send_photo(message.chat.id, photo)
-    await bot.send_message(message.chat.id, choose_resort_text_2.format(resort=message.text),
+    await bot.send_message(message.chat.id, choose_resort_text.format(resort=message.text),
                            reply_markup=kb_service, parse_mode='html')
 
 
@@ -86,9 +85,8 @@ async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext)
 async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     resort = data.get('resort')
-
     food_info = await get_food_info(resort)
-    await bot.send_message(query.message.chat.id, food_info,
+    await bot.send_message(query.message.chat.id, food_start_text.format(resort=resort) + food_info,
                            reply_markup=kb_service, parse_mode='html')
 
 

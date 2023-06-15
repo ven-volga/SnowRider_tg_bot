@@ -1,8 +1,6 @@
 import asyncio
 import os
 from copy import deepcopy
-from typing import Any
-
 from pymongo import MongoClient
 from datetime import datetime
 
@@ -27,12 +25,12 @@ services_log_null = {
 requests_log_day = deepcopy(services_log_null)
 
 
-async def download_requests_log() -> dict:
+async def download_requests_log() -> dict[dict]:
     log_data = log.find_one()
     return log_data
 
 
-async def join_logs() -> dict:
+async def join_logs() -> dict[dict]:
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
     new_log = {}
@@ -56,7 +54,7 @@ async def upload_requests_log() -> None:
     requests_log_day.update(deepcopy(services_log_null))
 
 
-async def schedule_log_task() -> Any:
+async def schedule_log_task() -> None:
     while True:
         await asyncio.sleep(60 * 60 * 24)
         await upload_requests_log()
