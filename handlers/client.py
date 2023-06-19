@@ -86,8 +86,16 @@ async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     resort = data.get('resort')
     food_info = await get_food_info(resort)
-    await bot.send_message(query.message.chat.id, food_start_text.format(resort=resort) + food_info,
-                           reply_markup=kb_service, parse_mode='html')
+    match resort:
+        case 'Плай' | 'Красія':
+            food_kb = InlineKeyboardMarkup(row_width=1).add(
+                InlineKeyboardButton(text=f'На сайт курорту {resort}',
+                                     url=food_info))
+            await bot.send_message(query.message.chat.id, food_individual_text.format(resort=resort),
+                                   reply_markup=food_kb, parse_mode='html')
+        case _:
+            await bot.send_message(query.message.chat.id, food_global_text.format(resort=resort) + food_info,
+                                   reply_markup=kb_service, parse_mode='html')
 
 
 async def callback_attractions_handler(query: types.CallbackQuery, state: FSMContext):

@@ -16,7 +16,7 @@ async def get_tracks_info(resort: str) -> str:
     return tracks_data
 
 
-async def get_food_info(resort: str) -> list:
+async def get_food_info(resort: str) -> str:
     food_data_list = await get_resort('food_info', resort)
     food_data_string = ''
     for restaurant in food_data_list:
