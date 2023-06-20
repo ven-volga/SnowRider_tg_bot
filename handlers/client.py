@@ -47,7 +47,7 @@ async def command_resorts_info(message: types.Message, state: FSMContext):
         requests_log_day[resort]["Про курорт"] += 1
 
         if resort:
-            await bot.send_message(message.chat.id, '<b>Друже, що цікавить?</b>', reply_markup=resort_options_kb,
+            await bot.send_message(message.chat.id, '<b>Друже, що цікавить?</b>\n\n', reply_markup=resort_options_kb,
                                    parse_mode='html')
         else:
             raise KeyError()
@@ -225,8 +225,9 @@ async def command_trains(message: types.Message, state: FSMContext):
 
         if resort:
             train_url = await get_train_url(resort)
-            trains_kb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(
-                text=f"До розкладу руху", url=train_url))
+            trains_kb = InlineKeyboardMarkup(row_width=1).add(
+                InlineKeyboardButton(text='Розклад руху потягів', url=train_url),
+                InlineKeyboardButton(text='Ботик Укрзалізниці', url='tg://resolve?domain=@Ukrzaliznytsia_Tickets_Bot'))
 
             train_info = await get_train_info(resort)
             await bot.send_message(message.chat.id, train_info,
@@ -237,6 +238,10 @@ async def command_trains(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
+async def command_info(message: types.Message):
+    await bot.send_message(message.chat.id, info_text, reply_markup=kb_resorts, parse_mode='html')
+
+
 async def handle_exception(exception, message):
     if isinstance(exception, KeyError):
         await bot.send_message(message.chat.id, except_key_error_text, reply_markup=kb_resorts, parse_mode='html')
@@ -245,8 +250,8 @@ async def handle_exception(exception, message):
 
 
 def register_handler_client(dp: Dispatcher):
-    dp.register_message_handler(command_start, lambda message: message.text in ("/start", "help", "info",
-                                                                                "До вибору курорту"))
+    dp.register_message_handler(command_start, lambda message: message.text in ("/start", "/help", "До вибору курорту"))
+    dp.register_message_handler(command_info, lambda message: message.text == "/info")
     dp.register_message_handler(command_resorts, lambda message: message.text in
                                                                  ("Славське", "Драгобрат", "Буковель", "Пилипець",
                                                                   "Плай", "Яблуниця", "Красія", "Мигове", "Яремче"))
