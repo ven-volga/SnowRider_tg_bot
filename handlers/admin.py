@@ -1,3 +1,4 @@
+import os
 from aiogram import types, Dispatcher
 from create_bot import bot
 from data_and_metrics.client_requests import download_requests_log
@@ -15,7 +16,7 @@ async def parce_log_data():
 
 
 async def command_get_log_data(message: types.Message):
-    if message.from_user.id == 574267783:
+    if message.from_user.id == int(os.getenv('ADMIN_ID')):
         log_data = await parce_log_data()
         await bot.send_message(message.chat.id, log_data, parse_mode='html')
     else:

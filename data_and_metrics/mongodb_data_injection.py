@@ -205,5 +205,5 @@ def insert_log_to_db():
 
 if __name__ == '__main__':
     insert_data_to_db()
-    # insert_log_to_db()
-    pass
+    insert_log_to_db()
+    # pass
