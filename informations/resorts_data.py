@@ -1,7 +1,7 @@
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
-from datetime import datetime
+from loguru import logger
 
 load_dotenv(find_dotenv())
 
@@ -15,7 +15,7 @@ db_data: dict | None = None
 async def get_db_data():
     global db_data
     db_data = data.find_one()
-    print("Data from database saved in value", datetime.now().strftime('%d %B %G %H:%M:%S'))
+    logger.info('Data from database loaded successfully')
 
 
 async def get_resort(service, resort_name):

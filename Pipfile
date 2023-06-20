@@ -11,6 +11,7 @@ lxml = "*"
 pymongo = "*"
 asyncio = "*"
 aiohttp = "*"
+loguru = "*"
 
 [dev-packages]
 pytest = "*"

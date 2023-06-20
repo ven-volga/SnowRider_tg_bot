@@ -3,12 +3,12 @@ from aiogram import executor
 from create_bot import dp
 from data_and_metrics.client_requests import schedule_log_task, upload_requests_log
 from handlers import client, admin, other
-from datetime import datetime
 from informations.resorts_data import get_db_data
+from loguru import logger
 
 
 async def on_startup(_: dp):
-    print("Bot is online! Started at", datetime.now().strftime('%d %B %G %H:%M:%S'))
+    logger.info('Bot is online!')
     await get_db_data()
     schedule_task = asyncio.create_task(schedule_log_task())
     await schedule_task
@@ -16,6 +16,7 @@ async def on_startup(_: dp):
 
 async def on_shutdown(_: dp):
     await upload_requests_log()
+    logger.info('Bot is shutdown!\n')
 
 
 client.register_handler_client(dp)
