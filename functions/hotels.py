@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 from informations.resorts_data import get_resort
+from loguru import logger
 import aiohttp
 
 
+@logger.catch
 async def parse_hotels(resort):
     hotels, prices, guests, urls = [], [], [], []
     async with aiohttp.ClientSession() as session:
@@ -32,6 +34,7 @@ async def parse_hotels(resort):
     return hotels, prices, guests, urls
 
 
+@logger.catch
 async def recommend_hotels(resort):
     parce_info = await parse_hotels(resort)
     hotels = parce_info[0]
@@ -47,6 +50,7 @@ async def recommend_hotels(resort):
     return hotels_str
 
 
+@logger.catch
 async def general_hotels_price(resort):
     price_data = await parse_hotels(resort)
     price_info = price_data[1]

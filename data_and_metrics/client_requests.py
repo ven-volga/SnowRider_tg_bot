@@ -26,11 +26,13 @@ services_log_null = {
 requests_log_day = deepcopy(services_log_null)
 
 
+@logger.catch
 async def download_requests_log() -> dict[dict]:
     log_data = log.find_one()
     return log_data
 
 
+@logger.catch
 async def join_logs() -> dict[dict]:
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
@@ -47,6 +49,7 @@ async def join_logs() -> dict[dict]:
     return new_log
 
 
+@logger.catch
 async def upload_requests_log() -> None:
     global requests_log_day
     new_log = await join_logs()
@@ -56,6 +59,7 @@ async def upload_requests_log() -> None:
     logger.success('Request log uploaded to the database')
 
 
+@logger.catch
 async def schedule_log_task() -> None:
     while True:
         await asyncio.sleep(60 * 60 * 24)

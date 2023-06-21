@@ -37,5 +37,3 @@ resort_options_kb = InlineKeyboardMarkup(row_width=1).add(
     InlineKeyboardButton(text="Як доїхати", callback_data="how_get_to_resort"),
     InlineKeyboardButton(text="Де поїсти", callback_data="resort_food"),
     InlineKeyboardButton(text="Що подивитись", callback_data="resort_attractions"))
-
-

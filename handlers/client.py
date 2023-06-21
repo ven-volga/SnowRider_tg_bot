@@ -20,7 +20,7 @@ from loguru import logger
 
 
 class ResortState(StatesGroup):
-    """ Value for save 'Resort name' for client """
+    """ Class for save user 'Resort name' into private value """
     ChoosingResort = State()
 
 

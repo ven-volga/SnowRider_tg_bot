@@ -1,4 +1,5 @@
 import os
+from loguru import logger
 
 welcome_photo_path = os.getenv('WELCOME_PHOTO_PATH')
 
@@ -15,6 +16,7 @@ photo_name = {
 }
 
 
+@logger.catch
 async def welcome_photo(resort: str) -> str:
     photo_path = welcome_photo_path + photo_name[resort]
     return photo_path

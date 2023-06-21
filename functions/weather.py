@@ -1,15 +1,16 @@
 from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
-import os
-
+from loguru import logger
 from data_and_metrics.weather_descriptions import weather_descriptions, weather_icons
 from informations.resorts_data import get_resort
 import aiohttp
+import os
 
 load_dotenv(find_dotenv())  # find api value
 api = os.getenv('WEATHER_API')
 
 
+@logger.catch
 async def get_current_weather(resort, api=api):
     location = await get_resort('resorts_weather', resort)
     current_weather_info = None
@@ -52,6 +53,7 @@ async def get_current_weather(resort, api=api):
     return current_weather_info
 
 
+@logger.catch
 async def get_future_weather(resort, api=api):
     location = await get_resort('resorts_weather', resort)
     future_weather_info = "<b>На найближчі дні очікується:</b>\n"
