@@ -53,7 +53,7 @@ async def upload_requests_log() -> None:
     log.insert_one(new_log)
     requests_log_day.clear()
     requests_log_day.update(deepcopy(services_log_null))
-    logger.info('Request log uploaded to the database')
+    logger.success('Request log uploaded to the database')
 
 
 async def schedule_log_task() -> None:

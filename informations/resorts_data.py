@@ -15,7 +15,7 @@ db_data: dict | None = None
 async def get_db_data():
     global db_data
     db_data = data.find_one()
-    logger.info('Data from database loaded successfully')
+    logger.success('Data from database loaded successfully')
 
 
 async def get_resort(service, resort_name):

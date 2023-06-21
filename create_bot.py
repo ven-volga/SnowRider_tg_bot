@@ -5,7 +5,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from loguru import logger
 import os
 
-logger.add('./logs/bot.log', format='{time} {level} {message}', rotation='1 MB', compression='zip')
+logger.add('./logs/bot.log', format='{time:DD:MM:YY | H:mm:ss | Z} {level} {message}',
+           rotation='1 MB', compression='zip', catch=True)
 
 storage = MemoryStorage()
 

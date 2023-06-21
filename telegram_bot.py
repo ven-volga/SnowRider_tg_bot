@@ -8,7 +8,7 @@ from loguru import logger
 
 
 async def on_startup(_: dp):
-    logger.info('Bot is online!')
+    logger.success('Bot is online!')
     await get_db_data()
     schedule_task = asyncio.create_task(schedule_log_task())
     await schedule_task
@@ -16,7 +16,7 @@ async def on_startup(_: dp):
 
 async def on_shutdown(_: dp):
     await upload_requests_log()
-    logger.info('Bot is shutdown!\n')
+    logger.success('Bot is shutdown!\n')
 
 
 client.register_handler_client(dp)
