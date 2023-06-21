@@ -1,0 +1,3 @@
+from data_and_metrics import client_requests
+from data_and_metrics import photo_sender
+from data_and_metrics import weather_descriptions
