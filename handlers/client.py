@@ -16,6 +16,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from data_and_metrics.client_requests import requests_log_day
 from keyboards.client_kb import resort_options_kb
+from loguru import logger
 
 
 class ResortState(StatesGroup):
@@ -246,7 +247,7 @@ async def handle_exception(exception, message):
     if isinstance(exception, KeyError):
         await bot.send_message(message.chat.id, except_key_error_text, reply_markup=kb_resorts, parse_mode='html')
     else:
-        pass
+        logger.exception(Exception)
 
 
 def register_handler_client(dp: Dispatcher):
