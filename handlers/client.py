@@ -1,12 +1,12 @@
 from aiogram import types, Dispatcher
 from create_bot import bot
-from data_and_metrics.photo_sender import welcome_photo
+from functions.photo_sender import welcome_photo
 from functions.skipass import get_skipass_info
 from functions.resorts_info import get_tracks_info, get_attractions_info, get_food_info
 from functions.trains import get_train_url, get_train_info
 from functions.web_cams import get_webcam_url
-from informations.resorts_data import get_resort
-from informations.text_content import *
+from information.resorts_data import get_resort
+from information.text_content import *
 from keyboards import kb_resorts, kb_service
 from functions.hotels import recommend_hotels, general_hotels_price
 from functions.resorts_info import get_resort_info, how_to_get
@@ -24,7 +24,7 @@ class ResortState(StatesGroup):
     ChoosingResort = State()
 
 
-async def command_start(message: types.Message, state: FSMContext):
+async def command_start(message: types.Message, state: FSMContext) -> None:
     await state.finish()
     await bot.send_message(message.chat.id,
                            welcome_text.format(first_name=message.from_user.first_name,
@@ -32,7 +32,7 @@ async def command_start(message: types.Message, state: FSMContext):
                            reply_markup=kb_resorts, parse_mode='html')
 
 
-async def command_resorts(message: types.Message, state: FSMContext):
+async def command_resorts(message: types.Message, state: FSMContext) -> None:
     await state.finish()
     await state.update_data(resort=message.text)
     photo = InputFile(await welcome_photo(resort=message.text))
@@ -41,7 +41,7 @@ async def command_resorts(message: types.Message, state: FSMContext):
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_resorts_info(message: types.Message, state: FSMContext):
+async def command_resorts_info(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -56,7 +56,7 @@ async def command_resorts_info(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def callback_resort_info_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_resort_info_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -65,7 +65,7 @@ async def callback_resort_info_handler(query: types.CallbackQuery, state: FSMCon
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -74,7 +74,7 @@ async def callback_how_to_get_handler(query: types.CallbackQuery, state: FSMCont
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -83,7 +83,7 @@ async def callback_tracks_handler(query: types.CallbackQuery, state: FSMContext)
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_food_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
     food_info = await get_food_info(resort)
@@ -99,7 +99,7 @@ async def callback_food_handler(query: types.CallbackQuery, state: FSMContext):
                                    reply_markup=kb_service, parse_mode='html')
 
 
-async def callback_attractions_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_attractions_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -108,7 +108,7 @@ async def callback_attractions_handler(query: types.CallbackQuery, state: FSMCon
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_weather(message: types.Message, state: FSMContext):
+async def command_weather(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -128,7 +128,7 @@ async def command_weather(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def callback_future_weather_handler(query: types.CallbackQuery, state: FSMContext):
+async def callback_future_weather_handler(query: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -137,7 +137,7 @@ async def callback_future_weather_handler(query: types.CallbackQuery, state: FSM
                            reply_markup=kb_service, parse_mode='html')
 
 
-async def command_hotels(message: types.Message, state: FSMContext):
+async def command_hotels(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -159,7 +159,7 @@ async def command_hotels(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def command_recommends(callback: types.CallbackQuery, state: FSMContext):
+async def command_recommends(callback: types.CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     resort = data.get('resort')
 
@@ -173,7 +173,7 @@ async def command_recommends(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-async def command_web_cams(message: types.Message, state: FSMContext):
+async def command_web_cams(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -202,7 +202,7 @@ async def command_web_cams(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def command_skipass(message: types.Message, state: FSMContext):
+async def command_skipass(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -218,7 +218,7 @@ async def command_skipass(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def command_trains(message: types.Message, state: FSMContext):
+async def command_trains(message: types.Message, state: FSMContext) -> None:
     try:
         data = await state.get_data()
         resort = data.get('resort')
@@ -239,18 +239,18 @@ async def command_trains(message: types.Message, state: FSMContext):
         await handle_exception(e, message)
 
 
-async def command_info(message: types.Message):
+async def command_info(message: types.Message) -> None:
     await bot.send_message(message.chat.id, info_text, reply_markup=kb_resorts, parse_mode='html')
 
 
-async def handle_exception(exception, message):
+async def handle_exception(exception, message) -> None:
     if isinstance(exception, KeyError):
         await bot.send_message(message.chat.id, except_key_error_text, reply_markup=kb_resorts, parse_mode='html')
     else:
         logger.exception(Exception)
 
 
-def register_handler_client(dp: Dispatcher):
+def register_handler_client(dp: Dispatcher) -> None:
     dp.register_message_handler(command_start, lambda message: message.text in ("/start", "/help", "До вибору курорту"))
     dp.register_message_handler(command_info, lambda message: message.text == "/info")
     dp.register_message_handler(command_resorts, lambda message: message.text in

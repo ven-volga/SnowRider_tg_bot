@@ -1,5 +1,5 @@
 from loguru import logger
-from informations.resorts_data import get_resort
+from information.resorts_data import get_resort
 
 
 @logger.catch

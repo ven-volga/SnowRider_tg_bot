@@ -3,7 +3,7 @@ from aiogram import executor
 from create_bot import dp
 from data_and_metrics.client_requests import schedule_log_task, upload_requests_log
 from handlers import client, admin, other
-from informations.resorts_data import get_db_data
+from information.resorts_data import get_db_data
 from loguru import logger
 
 

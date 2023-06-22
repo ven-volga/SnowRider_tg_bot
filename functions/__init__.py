@@ -1,4 +1,5 @@
 from functions import hotels
+from functions import photo_sender
 from functions import resorts_info
 from functions import skipass
 from functions import trains

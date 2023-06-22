@@ -4,7 +4,7 @@ from create_bot import bot
 from data_and_metrics.client_requests import download_requests_log
 
 
-async def parce_log_data():
+async def parse_log_data() -> str:
     log_string = ""
     log_data = await download_requests_log()
     for keys in log_data:
@@ -15,13 +15,13 @@ async def parce_log_data():
     return log_string
 
 
-async def command_get_log_data(message: types.Message):
+async def command_get_log_data(message: types.Message) -> None:
     if message.from_user.id == int(os.getenv('ADMIN_ID')):
-        log_data = await parce_log_data()
+        log_data = await parse_log_data()
         await bot.send_message(message.chat.id, log_data, parse_mode='html')
     else:
         await bot.send_message(message.chat.id, "You must be my admin", parse_mode='html')
 
 
-def register_handler_admin(dp: Dispatcher):
+def register_handler_admin(dp: Dispatcher) -> None:
     dp.register_message_handler(command_get_log_data, lambda message: "show_me_log" in message.text)

@@ -4,6 +4,7 @@ from copy import deepcopy
 from pymongo import MongoClient
 from datetime import datetime
 from loguru import logger
+from typing import NoReturn
 
 client_db = MongoClient(os.getenv('MONGO_URI'))
 db = client_db.ski_assistant_tg
@@ -27,13 +28,13 @@ requests_log_day = deepcopy(services_log_null)
 
 
 @logger.catch
-async def download_requests_log() -> dict[dict]:
+async def download_requests_log() -> dict[str, dict[str, int] | int | datetime]:
     log_data = log.find_one()
     return log_data
 
 
 @logger.catch
-async def join_logs() -> dict[dict]:
+async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
     new_log = {}
@@ -50,7 +51,7 @@ async def join_logs() -> dict[dict]:
 
 
 @logger.catch
-async def upload_requests_log() -> None:
+async def upload_requests_log() -> NoReturn:
     global requests_log_day
     new_log = await join_logs()
     log.insert_one(new_log)
@@ -60,7 +61,7 @@ async def upload_requests_log() -> None:
 
 
 @logger.catch
-async def schedule_log_task() -> None:
+async def schedule_log_task() -> NoReturn:
     while True:
-        await asyncio.sleep(60 * 60 * 24)
+        await asyncio.sleep(60 * 60 * 6)
         await upload_requests_log()

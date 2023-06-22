@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
-from informations.resorts_data import get_resort
+from information.resorts_data import get_resort
 from loguru import logger
 import aiohttp
 
 
 @logger.catch
-async def parse_hotels(resort):
+async def parse_hotels(resort: str) -> tuple[list[str], list[int], list[str], list[str]]:
     hotels, prices, guests, urls = [], [], [], []
     async with aiohttp.ClientSession() as session:
         url = await get_resort('hotels_links', resort)
@@ -35,23 +35,23 @@ async def parse_hotels(resort):
 
 
 @logger.catch
-async def recommend_hotels(resort):
+async def recommend_hotels(resort: str) -> str:
     parce_info = await parse_hotels(resort)
     hotels = parce_info[0]
     prices = parce_info[1]
     guests = parce_info[2]
     urls = parce_info[3]
 
-    hotels_str = ""
+    hotels_str = ''
 
     for hotel in range(len(hotels)):
-        hotels_str += f"<b>{hotels[hotel]}</b>\nвартість <b>від {prices[hotel]} грн.</b> " \
-                      f"({guests[hotel]})\n{urls[hotel]}\n{'-' * 40}\n"
+        hotels_str += f'<b>{hotels[hotel]}</b>\nвартість <b>від {prices[hotel]} грн.</b> ' \
+                      f'({guests[hotel]})\n{urls[hotel]}\n{"-" * 40}\n'
     return hotels_str
 
 
 @logger.catch
-async def general_hotels_price(resort):
+async def general_hotels_price(resort: str) -> tuple[int, int, int]:
     price_data = await parse_hotels(resort)
     price_info = price_data[1]
     average_price = round(sum(price_info) / len(price_info))

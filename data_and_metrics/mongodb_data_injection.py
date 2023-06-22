@@ -1,4 +1,5 @@
 import os
+from typing import NoReturn
 from pymongo import MongoClient
 from datetime import datetime
 
@@ -8,7 +9,7 @@ data = db.resorts_content
 log = db.client_requests
 
 
-def insert_data_to_db():
+def insert_data_to_db() -> NoReturn:
     data.insert_one({
         # resorts links on Hotels24.ua
         'hotels_links': {
@@ -183,7 +184,7 @@ def insert_data_to_db():
     print("Insert data into database successfully complete")
 
 
-def insert_log_to_db():
+def insert_log_to_db() -> NoReturn:
     log.insert_one(
         {
             "_id": 1,
