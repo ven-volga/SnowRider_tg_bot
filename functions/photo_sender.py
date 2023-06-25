@@ -18,5 +18,12 @@ photo_name = {
 
 @logger.catch
 async def welcome_photo(resort: str) -> str:
+    """
+    Forms the path to the welcome photo of the resort.
+
+    :param resort: The name of the resort from the client's request
+                   (used as a dictionary key to get the photo name)
+    :return: The absolute path to the resort photo.
+    """
     photo_path = welcome_photo_path + photo_name[resort]
     return photo_path

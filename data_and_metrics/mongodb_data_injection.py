@@ -10,6 +10,9 @@ log = db.client_requests
 
 
 def insert_data_to_db() -> NoReturn:
+    """
+    Inserts all the necessary information for the operation of bot handlers into the database.
+    """
     data.insert_one({
         # resorts links on Hotels24.ua
         'hotels_links': {
@@ -185,6 +188,9 @@ def insert_data_to_db() -> NoReturn:
 
 
 def insert_log_to_db() -> NoReturn:
+    """
+    Insert an empty log of user requests to the database.
+    """
     log.insert_one(
         {
             "_id": 1,

@@ -10,6 +10,14 @@ weather_api: str = os.getenv('WEATHER_API')
 
 @logger.catch
 async def get_current_weather(resort: str, api=weather_api) -> str:
+    """
+    Retrieves current weather information for the selected resort.
+
+    :param resort: The name of the resort from the client's request
+                   (used as a dictionary key to get location coordinates for weather API)
+    :param api: API key for the weather service (default value is the weather_api constant)
+    :return: A string with the current weather information for the selected resort.
+    """
     location = await get_resort('resorts_weather', resort)
 
     async with aiohttp.ClientSession() as session:
@@ -47,6 +55,14 @@ async def get_current_weather(resort: str, api=weather_api) -> str:
 
 @logger.catch
 async def get_future_weather(resort: str, api=weather_api) -> str:
+    """
+    Retrieves weather information for the next 5 days for the selected resort.
+
+    :param resort: The name of the resort from the client's request
+                   (used as a dictionary key to get location coordinates for weather API)
+    :param api: API key for the weather service (default value is the weather_api constant)
+    :return: A string with the weather information for the next 5 days for the selected resort.
+    """
     location = await get_resort('resorts_weather', resort)
     future_weather_info = "<b>На найближчі дні очікується:</b>\n"
 

@@ -6,6 +6,14 @@ import aiohttp
 
 @logger.catch
 async def parse_hotels(resort: str) -> tuple[list[str], list[int], list[str], list[str]]:
+    """
+    Parses the hotel24.ua web page based on the client's request.
+
+    :param resort: The name of the resort from the client's request
+           (used as a dictionary key to get the resort URL for parsing)
+    :return: A tuple containing lists with hotel information
+            (recommended hotels, prices, periods and guest counts, recommended hotel URLs)
+    """
     hotels, prices, guests, urls = [], [], [], []
     async with aiohttp.ClientSession() as session:
         url = await get_resort('hotels_links', resort)
@@ -36,6 +44,13 @@ async def parse_hotels(resort: str) -> tuple[list[str], list[int], list[str], li
 
 @logger.catch
 async def recommend_hotels(resort: str) -> str:
+    """
+    Forms a response string for the client request "recommend_hotels".
+
+    :param resort: The name of the resort from the client's request
+                   (used as a dictionary key to get the resort URL for parsing)
+    :return: A string containing information about recommended hotels (names, prices, URLs)
+    """
     parce_info = await parse_hotels(resort)
     hotels = parce_info[0]
     prices = parce_info[1]
@@ -52,6 +67,13 @@ async def recommend_hotels(resort: str) -> str:
 
 @logger.catch
 async def general_hotels_price(resort: str) -> tuple[int, int, int]:
+    """
+    Obtains information on the cost of hotels at the selected resort.
+
+    :param resort: The name of the resort from the client's request
+                   (used as a dictionary key to get the resort URL for parsing)
+    :return: A tuple containing information about the average hotel price, minimum price, and maximum price.
+    """
     price_data = await parse_hotels(resort)
     price_info = price_data[1]
     average_price = round(sum(price_info) / len(price_info))

@@ -29,12 +29,26 @@ requests_log_day = deepcopy(services_log_null)
 
 @logger.catch
 async def download_requests_log() -> dict[str, dict[str, int] | int | datetime]:
+    """
+    This function retrieves the request log data from the database and returns it as a dictionary.
+    :return: dict[str, dict[str, int] | int | datetime]: Dictionary representing the request log data.
+    :except: If an exception occurs during the download, the exception data is added to the log file with loguru.
+    """
     log_data = log.find_one()
     return log_data
 
 
 @logger.catch
 async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
+    """
+    Retrieves the last requests from the database, deletes the previous log,
+    and creates a new log by merging the current and previous request histories.
+    Returns a dictionary with the actual request count for each resort and service.
+
+    :return: dict[str, dict[str, int] | int | datetime]:
+            Dictionary with the actual request count for each resort and service
+    :except: If the merge fails, a debug message is logged
+    """
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
     new_log = {}
@@ -47,11 +61,17 @@ async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
             new_log[resort] = 1
         elif resort == "time_stamp":
             new_log[resort] = datetime.now()
+    else:
+        logger.debug('Failed to merge user request logs')
     return new_log
 
 
 @logger.catch
 async def upload_requests_log() -> NoReturn:
+    """
+    Uploads the current user request log into the database,
+    clears the daily request log, and logs the action.
+    """
     global requests_log_day
     new_log = await join_logs()
     log.insert_one(new_log)
@@ -62,6 +82,10 @@ async def upload_requests_log() -> NoReturn:
 
 @logger.catch
 async def schedule_log_task() -> NoReturn:
+    """
+    Creates a scheduled task to upload the current query log to the database.
+    The task runs every 10 hours.
+    """
     while True:
-        await asyncio.sleep(60 * 60 * 6)
+        await asyncio.sleep(60 * 60 * 10)
         await upload_requests_log()
