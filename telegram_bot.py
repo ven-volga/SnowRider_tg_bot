@@ -8,6 +8,11 @@ from loguru import logger
 
 
 async def on_startup(_: dp):
+    """
+    Performs tasks on bot startup.
+
+    :param _: The argument is ignored and not used in the function.
+    """
     logger.success('Bot is online!')
     await get_db_data()
     schedule_task = asyncio.create_task(schedule_log_task())
@@ -15,6 +20,11 @@ async def on_startup(_: dp):
 
 
 async def on_shutdown(_: dp):
+    """
+    Performs tasks on bot shutdown.
+
+    :param _: The argument is ignored and not used in the function.
+    """
     await upload_requests_log()
     logger.success('Bot is shutdown!\n')
 

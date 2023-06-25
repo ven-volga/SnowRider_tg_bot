@@ -47,7 +47,6 @@ async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
 
     :return: dict[str, dict[str, int] | int | datetime]:
             Dictionary with the actual request count for each resort and service
-    :except: If the merge fails, a debug message is logged
     """
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
@@ -61,8 +60,7 @@ async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
             new_log[resort] = 1
         elif resort == "time_stamp":
             new_log[resort] = datetime.now()
-    else:
-        logger.debug('Failed to merge user request logs')
+    logger.debug('Merge user request log from DB and current request log')
     return new_log
 
 

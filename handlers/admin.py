@@ -5,6 +5,11 @@ from data_and_metrics.client_requests import download_requests_log
 
 
 async def parse_log_data() -> str:
+    """
+    Parses the downloaded requests log data and creates a formatted string.
+
+    :return: The formatted string containing the log information.
+    """
     log_string = ""
     log_data = await download_requests_log()
     for keys in log_data:
@@ -16,6 +21,11 @@ async def parse_log_data() -> str:
 
 
 async def command_get_log_data(message: types.Message) -> None:
+    """
+    Command handler to retrieve and send the log data.
+
+    :param message: The message object.
+    """
     if message.from_user.id == int(os.getenv('ADMIN_ID')):
         log_data = await parse_log_data()
         await bot.send_message(message.chat.id, log_data, parse_mode='html')
@@ -24,4 +34,9 @@ async def command_get_log_data(message: types.Message) -> None:
 
 
 def register_handler_admin(dp: Dispatcher) -> None:
+    """
+    Registers the message handler for the admin commands.
+
+    :param dp: The Dispatcher instance.
+    """
     dp.register_message_handler(command_get_log_data, lambda message: "show_me_log" in message.text)
