@@ -3,3 +3,4 @@ __pycache__/
 .idea/
 logs
 tests
+.pytest_cache
