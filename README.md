@@ -1,6 +1,6 @@
 # SnowRider telegram bot
 ___
-![image](/Users/IvanZavolzhenskyi/Documents/Design/Bot logo/SnowRider_RM.png)
+![image](./data_and_metrics/welcome_photos/SnowRider_RM.png)
 ___
 ### About:
 #### SnowRider це твій помічник з планування гірськолижного відпочинку!
@@ -50,9 +50,10 @@ ___
 ___
 ### Authors and acknowledgment:
 ***Розробник та власник проекту Ivan Zavolzhenskyi.***
+
 Зворотній звʼязок по цьому проекту - snowrider.bot@gmail.com.
 
-Для реалізації свого функціоналу бот використовує різноманітну інформацію, що береться з таких надійних джерел, як openweathermap.org, hotels24.ua, snih.info, vkazivnyk.com, go-to.rest та інші.Дуже вдячний цим ресурсам за надану інформацію.
+Для реалізації свого функціоналу бот використовує різноманітну інформацію, що береться з таких надійних джерел, як openweathermap.org, hotels24.ua, snih.info, vkazivnyk.com, go-to.rest та інші. Дуже вдячний цим ресурсам за надану інформацію.
 ___
 ### License:
 Non-Commercial Use — Для некомерційного використання.
