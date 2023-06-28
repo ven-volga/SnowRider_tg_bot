@@ -15,8 +15,6 @@ loguru = "*"
 
 [dev-packages]
 pytest = "*"
-pytest-asyncio = "*"
-pyment = "*"
 
 [requires]
 python_version = "3.11"

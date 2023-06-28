@@ -8,12 +8,7 @@ db = client_db.ski_assistant_tg
 data = db.resorts_content
 log = db.client_requests
 
-
-def insert_data_to_db() -> NoReturn:
-    """
-    Inserts all the necessary information for the operation of bot handlers into the database.
-    """
-    data.insert_one({
+global_bot_data = {
         # resorts links on Hotels24.ua
         'hotels_links': {
             'Славське': 'https://hotels24.ua/?lang_code=uk&target=search&event=city&typeLink=hotels24&city_id=18598&order_hotel=15&dateDeparture=&openMap=0&city=%D0%A1%D0%BB%D0%B0%D0%B2%D1%81%D1%8C%D0%BA%D0%B5&guests%5B1%5D%5B0%5D=2&guests%5B1%5D%5B1%5D=0&guests%5B1%5D%5B2%5D=0&FilterForm%5Bgeocode_reverse%5D=null&geoLandingId=',
@@ -183,16 +178,9 @@ def insert_data_to_db() -> NoReturn:
             'Мигове': 'https://snih.info/uk/myhovo',
             'Яремче': 'https://snih.info/uk',
         },
-    })
-    print("Insert data into database successfully complete")
+    }
 
-
-def insert_log_to_db() -> NoReturn:
-    """
-    Insert an empty log of user requests to the database.
-    """
-    log.insert_one(
-        {
+client_requests_log = {
             "_id": 1,
             "time_stamp": datetime.now(),
             "Славське": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
@@ -204,9 +192,22 @@ def insert_log_to_db() -> NoReturn:
             "Красія": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
             "Мигове": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
             "Яремче": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
-        },
+        }
 
-    )
+
+def insert_data_to_db() -> NoReturn:
+    """
+    Inserts all the necessary information for the operation of bot handlers into the database.
+    """
+    data.insert_one(global_bot_data)
+    print("Insert data into database successfully complete")
+
+
+def insert_log_to_db() -> NoReturn:
+    """
+    Insert an empty log of user requests to the database.
+    """
+    log.insert_one(client_requests_log)
     print("Insert log into database successfully complete")
 
 
