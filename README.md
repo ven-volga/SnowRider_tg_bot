@@ -26,7 +26,7 @@ All bot functions work in interactive mode, utilizing various functional keyboar
 ***Functionalities available in this release:***:
 * **Resort Information:** opens access to the following options:
   * *General Information:* provides information about the resort, its history, features, and advantages.
-    * *About Trails:* offers details about the ski lifts, the number of trails, their length, and difficulty level.
+  * *About Trails:* offers details about the ski lifts, the number of trails, their length, and difficulty level.
   * *How to Get There:* provides information on how to reach the resort by train or private transportation.
   * *Places to Eat:* lists recommended dining establishments at the selected resort, along with contact details.
   * *Sightseeing:* highlights popular attractions, landmarks, and excursions at the resort.
