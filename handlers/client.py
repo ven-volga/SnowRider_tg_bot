@@ -14,7 +14,7 @@ from functions.weather import get_current_weather, get_future_weather
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from data_and_metrics.client_requests import requests_log_day
+from data_and_metrics.client_requests import requests_log_day, unique_users
 from keyboards.client_kb import resort_options_kb
 from loguru import logger
 
@@ -36,6 +36,7 @@ async def command_start(message: types.Message, state: FSMContext) -> None:
     :param state: The FSMContext object for managing the conversation state.
     """
     await state.finish()
+    unique_users.add(message.from_user.id)
     await bot.send_message(message.chat.id,
                            welcome_text.format(first_name=message.from_user.first_name,
                                                last_name=message.from_user.last_name),

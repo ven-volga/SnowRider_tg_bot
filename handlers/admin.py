@@ -15,7 +15,9 @@ async def parse_log_data() -> str:
     for keys in log_data:
         if keys == "time_stamp":
             log_string += f"<b><i>Log on: {log_data[keys].strftime('%d %B %G %H:%M')}</i></b>\n\n"
-        elif keys != "_id":
+        elif keys == "unique_users":
+            log_string += f"<b>Unique users count: {len(log_data[keys])}</b>\n\n"
+        elif keys not in ("_id", "time_stamp", "unique_users"):
             log_string += f"<b>{keys}</b>: {str(log_data[keys])[1:-1]}\n\n"
     return log_string
 

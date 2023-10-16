@@ -9,10 +9,15 @@ from typing import NoReturn
 client_db = MongoClient(os.getenv('MONGO_URI'))
 db = client_db.ski_assistant_tg
 log = db.client_requests
+unique_users = set()
+unique_users_list = []
+log_update_time = 30 #60 * 60 * 10  # sec * min * h
+
 
 services_log_null = {
     "_id": 1,
     "time_stamp": datetime.now(),
+    "unique_users": unique_users_list,
     "Славське": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
     "Драгобрат": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
     "Буковель": {"Про курорт": 0, "Погода": 0, "Житло": 0, "web-cams": 0, "Ski-pass": 0, "Потяги": 0},
@@ -48,11 +53,12 @@ async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
     :return: dict[str, dict[str, int] | int | datetime]:
             Dictionary with the actual request count for each resort and service
     """
+    global unique_users_list
     last_requests = await download_requests_log()
     log.delete_one({"_id": 1})
     new_log = {}
     for resort in requests_log_day:
-        if resort not in ("_id", "time_stamp"):
+        if resort not in ("_id", "time_stamp", "unique_users"):
             new_log[resort] = {}
             for service in requests_log_day[resort]:
                 new_log[resort][service] = requests_log_day[resort][service] + last_requests[resort][service]
@@ -60,7 +66,12 @@ async def join_logs() -> dict[str, dict[str, int] | int | datetime]:
             new_log[resort] = 1
         elif resort == "time_stamp":
             new_log[resort] = datetime.now()
-    logger.debug('Merge user request log from DB and current request log')
+        elif resort == "unique_users":
+            last_requests[resort].extend(list(unique_users))
+            unique_users_list = set(last_requests[resort])
+            new_log[resort] = list(unique_users_list)
+            print(new_log[resort])
+    logger.debug('Merging user request log from DB and current request log')
     return new_log
 
 
@@ -82,8 +93,8 @@ async def upload_requests_log() -> NoReturn:
 async def schedule_log_task() -> NoReturn:
     """
     Creates a scheduled task to upload the current query log to the database.
-    The task runs every 10 hours.
+    The task runs every "log_update_time".
     """
     while True:
-        await asyncio.sleep(60 * 60 * 10)
+        await asyncio.sleep(log_update_time)
         await upload_requests_log()
