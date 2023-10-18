@@ -11,7 +11,7 @@ db = client_db.ski_assistant_tg
 log = db.client_requests
 unique_users = set()
 unique_users_list = []
-log_update_time = 30 #60 * 60 * 10  # sec * min * h
+log_update_time = 60 * 60 * 10  # sec * min * h
 
 
 services_log_null = {
